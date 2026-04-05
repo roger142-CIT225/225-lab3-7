@@ -3,33 +3,34 @@ kind: Deployment
 metadata:
   name: dev-deployment
 spec:
-  replicas: 1
+  replicas: 1  # Number of NGINX pods to run
   selector:
     matchLabels:
-      app: nginx-dev
+      app: nginx
   template:
     metadata:
       labels:
-        app: nginx-dev
+        app: nginx
     spec:
       containers:
       - name: nginx
-        image: cithit/roger142:latest
+        image: cithit/roger142:latest  #<-------change this!
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 80  # Expose NGINX on port 80        
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: dev-ingress
+  name: nginx
 spec:
-  rules:
-  - host:
+  rules: 
+  - host: 
     http:
       paths:
       - path: /
         pathType: ImplementationSpecific
-        backend:
+        backend: 
           service:
             name: dev-service
             port:
@@ -41,7 +42,7 @@ metadata:
   name: dev-service
 spec:
   selector:
-    app: nginx-dev
+    app: nginx
   ports:
   - protocol: TCP
     port: 80
